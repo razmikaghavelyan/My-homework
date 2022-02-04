@@ -62,4 +62,3 @@ def file_without_digits(file_name):
 file_without_digits(my_homework)
 print(special_word(my_homework))
 print(unique_digit_counter(my_homework))
-
