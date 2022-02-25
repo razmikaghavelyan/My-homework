@@ -7,9 +7,9 @@ STATUS_CHOICES = (
 
 
 class Film(models.Model):
-    name = models.CharField(max_length=32),
-    rate = models.IntegerField(),
-    created_at = models.IntegerField(),
+    name = models.CharField(max_length=32)
+    rate = models.IntegerField()
+    created_at = models.IntegerField()
     is_published = models.BooleanField()
     status = models.IntegerField(choices=STATUS_CHOICES)
 
