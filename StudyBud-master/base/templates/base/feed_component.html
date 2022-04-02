@@ -1,0 +1,143 @@
+{% for post in posts %}
+<style type="text/css">
+.postListPost{
+margin-top: 40px;
+/* background-color: #474759; */
+width: 500px;
+color: white;
+border: 3px solid rgb(179, 179, 179);
+display: flex;
+flex-direction: column;
+}
+
+.postListPost__author{
+margin-left: 20px;
+/* margin-top: 10px; */
+/* margin-bottom: 10px; */
+display:flex;
+flex-direction:row;
+font-size:20px;
+}
+.PostListPost__author span{
+margin-left: 20px;
+/* color:cyan; */
+}
+.postListPost__actions{
+/* margin-top:10px; */
+/* margin-left: 20px; */
+color:rgb(179, 179, 179);
+}
+.postListPost__content{
+margin-top: 10px;
+text-align:justify;
+margin-left: 20px;
+margin-right: 20px;
+margin-bottom: 10px;
+}
+.postListPost__meta{
+margin-right: 20px;
+margin-top: 10px;
+margin-left: 20px;
+text-align: right;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: flex-end;
+margin-bottom: 10px;
+}
+.postListPost__header{
+display: flex;
+flex-direction: row;
+margin-bottom: 10px;
+margin-right: 20px;
+margin-top: 10px;
+justify-content: space-between;
+align-items: center;
+}
+hr{
+margin: 0px;
+margin-left: 20px;
+margin-right: 20px;
+height: 4px;
+background-color: gainsboro;
+color: white;
+border: 0px;
+}
+.roomListPost__topic{
+/* margin-top: 5px; */
+color: rgb(179, 179, 179);
+margin: 0px;
+}
+
+.avatar {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px solid var(--color-main);
+  margin-left: 5px;
+
+
+}
+</style>
+<div class="postListPost">
+    <div class="postListPost__header">
+        <a href="{% url 'user-profile' post.host.id %}" class="PostListPost__author">
+            <div class="avatar avatar--small">
+                <img src="{{post.host.avatar.url}}" />
+            </div>
+            <span>@{{post.host.username}}</span>
+        </a>
+        <div class="postListPost__actions">
+            <span>{{post.created|timesince}} ago</span>
+        </div>
+    </div>
+    <hr>
+    <div class="postListPost__content">
+        <a href="{% url 'post' post.id %}">{{post.description}}</a>
+    </div>
+    <hr>
+    <div class="postListPost__meta">
+        <a href="{% url 'post' post.id %}" class="postListPost__joined">
+            {{room.participants.all.count}} Join to discuss
+        </a>
+        <p class="roomListPost__topic">{{post.topic.name}}</p>
+        {% if post.photo %}
+        <img src="{{ post.photo.url }}" width="150" height="150">
+        {% endif %}
+
+    </div>
+    <div class="like_delete">
+        <form action="{% url 'like_post' %}" method="post">
+
+            {% csrf_token %}
+            {% if request.user.is_authenticated %}
+                {% if request.user in post.likes.all %}
+                <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-danger">{{ post.likes.count }} Like </button>
+            {% else %}
+                <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">{{ post.likes.count }} Like </button>
+            {% endif %}
+            {% else %}
+                <label type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">{{ post.likes.count }} Like </label>
+
+
+            {% endif %}
+
+
+        </form>
+        <form action="{% url 'update-post' post.id %}"  name="update_post" method="post" class="update" style="float: right;
+">          {% csrf_token %}
+            {% if post.host == request.user %}
+                <button type="submit" name="post_id" class="btn btn-primary" hred="{% url 'home'  %}"> Update</button>
+            {% endif %}
+
+        </form>
+        <form action="{% url 'delete_post' post.id %}"  name="delete_post" method="post">
+            {% csrf_token %}
+            {% if post.host == request.user %}
+                <button type="submit" name="post_id" class="btn btn-danger">Delete</button>
+            {% endif %}
+
+        </form>
+    </div>
+</div>
+{% endfor %}

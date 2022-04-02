@@ -1,0 +1,30 @@
+{% extends 'task/base.html' %}
+
+{% block content %}
+
+	<div class="todo-list">
+	<h3>Profile</h3>
+		<h2><strong>{{ profile.user.username }}</strong></h2>
+		<br>
+		<br>
+		<h2><strong>{{ profile.user.email }}</strong></h2>
+		<br>
+		<br>
+		<h2><strong>{{ profile.date_birth }}</strong></h2>
+		<br>
+		<br>
+		<img src="{{ profile.image.url }}">
+		<br>
+		<h2>{{ profile.bio }}</h2>
+		<br>
+		<h2>{{ profile.field }}</h2>
+		<br>
+
+	<a class="btn btn-sm btn-info" href="{% url 'profile_update' profile.id %}">Update</a>
+		<a class="btn btn-sm btn-danger" href="#">Delete</a>
+
+	</div>
+		{% endblock %}
+
+
+

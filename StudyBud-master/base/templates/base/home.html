@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main class="layout layout--3">
+  <div class="container">
+
+    {% include 'base/topics_component.html' %}
+
+
+    <div class="postList">
+      <div class="mobile-menu">
+        <form action="{% url 'home' %}" method="GET" class="header__search">
+        </form>
+        <div class="mobile-menuItems">
+          <a class="btn btn--main btn--pill" href="{% url 'topics' %}">Browse Topics</a>
+          <a class="btn btn--main btn--pill" href="{% url 'activity' %}">Recent Activities</a>
+        </div>
+      </div>
+
+      <div class="postList__header">
+        <div>
+          <h2>Posts</h2> <h3>{{post_count}} Posts </h3>
+        </div>
+
+        <a class="btn btn--main" href="{% url 'create-post' %}">
+          Create Post
+        </a>
+      </div>
+
+      {% include 'base/feed_component.html' %}
+
+    </div>
+
+  </div>
+</main>
+
+{% endblock %}

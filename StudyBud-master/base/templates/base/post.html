@@ -1,0 +1,127 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+    .coment{
+    width: 500px;
+    height: 50px;
+    border: 4px solid #17b3a9;
+    margin-bottom: 50px
+    }
+    .thread{
+    border: 4px solid
+    }
+    .threads{
+    padding-left: 0;
+    }
+</style>
+<main class="profile-page layout layout--2">
+  <div class="container">
+    <div class="post">
+      <div class="post__top">
+        <div class="post__topLeft">
+          <a href="{% url 'home' %}">
+          </a>
+          <h3>Post</h3>
+        </div>
+        {% if post.host == request.user %}
+        <div class="post__topRight">
+          <a href="{% url 'update-post' post.id %}">
+          </a>
+          <a href="{% url 'delete_post' post.id %}">
+          </a>
+        </div>
+        {% endif %}
+
+      </div>
+      <div class="post__box scroll">
+        <div class="post__header scroll">
+
+          <div class="post__hosted">
+            <p>Hosted By</p>
+            <a href="{% url 'user-profile' post.host.id %}" class="post__author">
+              <div class="avatar avatar--small">
+                <img src="{{post.host.avatar.url}}" />
+              </div>
+              <span>@{{post.host.username}}</span>
+            </a>
+          </div>
+          <span class="post__topics">{{post.topic}}</span>
+        </div>
+        <div class="post__info">
+            <h3>{{post.description}}</h3>
+            <span>{{post.created|timesince}} ago</span>
+          </div>
+        <div class="post__info">
+          <img src="{{ post.photo.url }}" >
+        </div>
+
+        <div class="post__conversation">
+          <div class="threads scroll">
+
+
+            {% for message in post_messages %}
+            <div class="thread">
+              <div class="thread__top">
+                <div class="thread__author">
+                  <a href="{% url 'user-profile' message.user.id %}" class="thread__authorInfo">
+                    <div class="avatar avatar--small">
+                      <img src="{{message.user.avatar.url}}" />
+                    </div>
+                    <span>@{{message.user.username}}</span>
+                  </a>
+                  <span class="thread__date">{{message.created|timesince}} ago</span>
+                   <form action="{% url 'delete-message' message.id %}"  name="delete_message" method="post">
+                      {% csrf_token %}
+                      {% if post.host == request.user %}
+                        <button type="submit" name="post_id" class="btn btn-danger">Delete</button>
+                      {% endif %}
+        </form>
+                </div>
+
+                {% if request.user == message.user %}
+                <a href="{% url 'delete-message' message.id %}">
+                  <div class="thread__delete">
+                  </div>
+                </a>
+                {% endif %}
+              </div>
+              <div class="thread__details">
+                {{message.body}}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+      <div class="post__message">
+        {% if request.user.is_authenticated %}
+          <form action="" method="POST">
+            {% csrf_token %}
+            <input class="coment" name="body" placeholder="Write your message here..." />
+          </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="participants">
+      <h3 class="participants__top">Participants <span>({{participants.count}} Joined)</span></h3>
+      <div class="participants__list scroll">
+        {% for user in participants %}
+        <a href="{%  url 'user-profile' user.id %}" class="participant">
+          <div class="avatar avatar--medium">
+            <img src="{{user.avatar.url}}" />
+          </div>
+          <p>
+            {{user.name}}
+            <span>@{{user.username}}</span>
+          </p>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+<script src="script.js"></script>
+{% endblock content %}
